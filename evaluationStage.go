@@ -135,9 +135,43 @@ func ltStage(left interface{}, right interface{}, parameters Parameters) (interf
 	return boolIface(left.(float64) < right.(float64)), nil
 }
 func equalStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
+	if leftValue, ok1 := left.(float64); ok1  {
+		if rightValue, ok2 := right.(string); ok2{
+			rightNum, err := strconv.ParseFloat(rightValue, 64)
+			if err == nil {
+				return boolIface(leftValue == rightNum), nil
+			}
+		}
+	}
+
+	if leftValue, ok1 := left.(string); ok1  {
+		if rightValue, ok2 := right.(float64); ok2{
+			leftNum, err := strconv.ParseFloat(leftValue, 64)
+			if err == nil {
+				return boolIface(leftNum == rightValue), nil
+			}
+		}
+	}
 	return boolIface(reflect.DeepEqual(left, right)), nil
 }
 func notEqualStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
+	if leftValue, ok1 := left.(float64); ok1  {
+		if rightValue, ok2 := right.(string); ok2{
+			rightNum, err := strconv.ParseFloat(rightValue, 64)
+			if err == nil {
+				return boolIface(!(leftValue == rightNum)), nil
+			}
+		}
+	}
+
+	if leftValue, ok1 := left.(string); ok1  {
+		if rightValue, ok2 := right.(float64); ok2{
+			leftNum, err := strconv.ParseFloat(leftValue, 64)
+			if err == nil {
+				return boolIface(!(leftNum == rightValue)), nil
+			}
+		}
+	}
 	return boolIface(!reflect.DeepEqual(left, right)), nil
 }
 func andStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
