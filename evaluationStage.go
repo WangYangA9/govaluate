@@ -6,8 +6,8 @@ import (
 	"math"
 	"reflect"
 	"regexp"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -112,32 +112,47 @@ func modulusStage(left interface{}, right interface{}, parameters Parameters) (i
 	return math.Mod(left.(float64), right.(float64)), nil
 }
 func gteStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
+	if left == nil || right == nil {
+		return boolIface(false), nil
+	}
 	if isString(left) && isString(right) {
 		return boolIface(left.(string) >= right.(string)), nil
 	}
 	return boolIface(left.(float64) >= right.(float64)), nil
 }
 func gtStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
+	if left == nil || right == nil {
+		return boolIface(false), nil
+	}
 	if isString(left) && isString(right) {
 		return boolIface(left.(string) > right.(string)), nil
 	}
 	return boolIface(left.(float64) > right.(float64)), nil
 }
 func lteStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
+	if left == nil || right == nil {
+		return boolIface(false), nil
+	}
 	if isString(left) && isString(right) {
 		return boolIface(left.(string) <= right.(string)), nil
 	}
 	return boolIface(left.(float64) <= right.(float64)), nil
 }
 func ltStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
+	if left == nil || right == nil {
+		return boolIface(false), nil
+	}
 	if isString(left) && isString(right) {
 		return boolIface(left.(string) < right.(string)), nil
 	}
 	return boolIface(left.(float64) < right.(float64)), nil
 }
 func equalStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	if leftValue, ok1 := left.(float64); ok1  {
-		if rightValue, ok2 := right.(string); ok2{
+	if left == nil || right == nil {
+		return boolIface(false), nil
+	}
+	if leftValue, ok1 := left.(float64); ok1 {
+		if rightValue, ok2 := right.(string); ok2 {
 			rightNum, err := strconv.ParseFloat(rightValue, 64)
 			if err == nil {
 				return boolIface(leftValue == rightNum), nil
@@ -145,8 +160,8 @@ func equalStage(left interface{}, right interface{}, parameters Parameters) (int
 		}
 	}
 
-	if leftValue, ok1 := left.(string); ok1  {
-		if rightValue, ok2 := right.(float64); ok2{
+	if leftValue, ok1 := left.(string); ok1 {
+		if rightValue, ok2 := right.(float64); ok2 {
 			leftNum, err := strconv.ParseFloat(leftValue, 64)
 			if err == nil {
 				return boolIface(leftNum == rightValue), nil
@@ -156,8 +171,11 @@ func equalStage(left interface{}, right interface{}, parameters Parameters) (int
 	return boolIface(reflect.DeepEqual(left, right)), nil
 }
 func notEqualStage(left interface{}, right interface{}, parameters Parameters) (interface{}, error) {
-	if leftValue, ok1 := left.(float64); ok1  {
-		if rightValue, ok2 := right.(string); ok2{
+	if left == nil || right == nil {
+		return boolIface(false), nil
+	}
+	if leftValue, ok1 := left.(float64); ok1 {
+		if rightValue, ok2 := right.(string); ok2 {
 			rightNum, err := strconv.ParseFloat(rightValue, 64)
 			if err == nil {
 				return boolIface(!(leftValue == rightNum)), nil
@@ -165,8 +183,8 @@ func notEqualStage(left interface{}, right interface{}, parameters Parameters) (
 		}
 	}
 
-	if leftValue, ok1 := left.(string); ok1  {
-		if rightValue, ok2 := right.(float64); ok2{
+	if leftValue, ok1 := left.(string); ok1 {
+		if rightValue, ok2 := right.(float64); ok2 {
 			leftNum, err := strconv.ParseFloat(leftValue, 64)
 			if err == nil {
 				return boolIface(!(leftNum == rightValue)), nil
@@ -521,6 +539,9 @@ func additionTypeCheck(left interface{}, right interface{}) bool {
 	but never between the two.
 */
 func comparatorTypeCheck(left interface{}, right interface{}) bool {
+	if left == nil || right == nil {
+		return true
+	}
 
 	if isFloat64(left) && isFloat64(right) {
 		return true
